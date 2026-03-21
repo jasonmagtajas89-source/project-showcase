@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jason's Project Showcase</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08090a;--bg2:#111214;--bg3:#181a1d;
+  --gold:#f0b429;--gold2:#c97d18;
+  --text:#f0ede8;--muted:#7a7870;--border:#232527;
+  --card:#13151a;
+  --radius:12px;
+  --font-head:'Playfair Display',Georgia,serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-mono:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;min-height:100vh;overflow-x:hidden}
+
+/* ── Noise overlay ── */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;opacity:.025;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px}
+
+/* ── Header ── */
+header{position:relative;padding:70px 40px 60px;text-align:center;border-bottom:1px solid var(--border);overflow:hidden}
+header::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 0%,rgba(240,180,41,.07),transparent);pointer-events:none}
+.tagline{font-family:var(--font-mono);font-size:11px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;margin-bottom:18px;opacity:.8}
+h1{font-family:var(--font-head);font-size:clamp(42px,7vw,80px);font-weight:900;line-height:1;letter-spacing:-2px;color:var(--text);margin-bottom:16px}
+h1 span{color:var(--gold)}
+.header-sub{font-size:15px;color:var(--muted);max-width:440px;margin:0 auto 32px;line-height:1.7}
+.add-btn{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#0a0800;font-family:var(--font-body);font-weight:500;font-size:14px;padding:12px 24px;border-radius:100px;border:none;cursor:pointer;transition:all .2s;letter-spacing:.3px}
+.add-btn:hover{background:var(--gold2);transform:translateY(-1px)}
+.add-btn svg{width:16px;height:16px}
+
+/* ── Stats row ── */
+.stats{display:flex;justify-content:center;gap:40px;padding:24px 40px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.stat-item{text-align:center}
+.stat-num{font-family:var(--font-head);font-size:28px;font-weight:700;color:var(--gold)}
+.stat-lbl{font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:2px}
+
+/* ── Filters ── */
+.controls{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:24px 40px;flex-wrap:wrap}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.filter-btn{background:transparent;border:1px solid var(--border);color:var(--muted);font-family:var(--font-body);font-size:12px;padding:6px 14px;border-radius:100px;cursor:pointer;transition:all .2s;letter-spacing:.5px}
+.filter-btn:hover{border-color:var(--gold);color:var(--gold)}
+.filter-btn.active{background:var(--gold);border-color:var(--gold);color:#0a0800;font-weight:500}
+.search-wrap{position:relative}
+.search-wrap input{background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:var(--font-body);font-size:13px;padding:8px 14px 8px 36px;border-radius:8px;outline:none;width:220px;transition:border-color .2s}
+.search-wrap input:focus{border-color:var(--gold)}
+.search-wrap input::placeholder{color:var(--muted)}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted);pointer-events:none}
+
+/* ── Grid ── */
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;padding:20px 40px 60px}
+.gallery.list-view{grid-template-columns:1fr}
+
+/* ── Card ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .25s;position:relative;animation:fadeUp .4s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.card:hover{border-color:rgba(240,180,41,.4);transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.4)}
+.card-img{width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--bg3);display:block;position:relative}
+.card-img-wrap{position:relative;overflow:hidden}
+.card-img-wrap::after{content:'View';position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--gold);opacity:0;transition:opacity .2s}
+.card:hover .card-img-wrap::after{opacity:1}
+.card-img-placeholder{width:100%;aspect-ratio:4/3;background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted)}
+.card-img-placeholder svg{width:32px;height:32px;opacity:.4}
+.card-img-placeholder span{font-size:12px;opacity:.5}
+.card-body{padding:16px}
+.card-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.tag{font-family:var(--font-mono);font-size:10px;padding:3px 8px;border-radius:4px;border:1px solid;letter-spacing:.5px;text-transform:uppercase}
+.tag-game{color:#7ab848;border-color:#7ab848;background:rgba(122,184,72,.08)}
+.tag-school{color:#5aaad0;border-color:#5aaad0;background:rgba(90,170,208,.08)}
+.tag-personal{color:#c97d18;border-color:#c97d18;background:rgba(201,125,24,.08)}
+.tag-tech{color:#9070d8;border-color:#9070d8;background:rgba(144,112,216,.08)}
+.card-title{font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.2}
+.card-desc{font-size:13px;color:var(--muted);line-height:1.6}
+.card-meta{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+.card-date{font-size:11px;color:var(--muted);font-family:var(--font-mono)}
+.card-actions{display:flex;gap:6px}
+.card-action-btn{background:var(--bg2);border:1px solid var(--border);color:var(--muted);width:28px;height:28px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.card-action-btn:hover{border-color:var(--gold);color:var(--gold)}
+.card-action-btn svg{width:13px;height:13px}
+.card-menu{position:absolute;top:10px;right:10px;z-index:2}
+.card-menu-btn{background:rgba(8,9,10,.7);border:1px solid var(--border);color:var(--text);width:30px;height:30px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);transition:all .2s;opacity:0}
+.card:hover .card-menu-btn{opacity:1}
+.card-menu-btn:hover{background:var(--bg3)}
+.card-menu-btn svg{width:14px;height:14px}
+.dropdown{position:absolute;right:0;top:36px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;min-width:130px;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.dropdown.open{display:block}
+.dropdown button{width:100%;background:none;border:none;color:var(--text);font-family:var(--font-body);font-size:13px;padding:10px 14px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .15s}
+.dropdown button:hover{background:var(--bg3);color:var(--gold)}
+.dropdown button svg{width:13px;height:13px;flex-shrink:0}
+.card-pin{position:absolute;top:10px;left:10px;background:var(--gold);color:#0a0800;font-size:10px;font-weight:500;padding:3px 8px;border-radius:100px;letter-spacing:.5px;font-family:var(--font-mono)}
+
+/* ── Empty state ── */
+.empty-state{grid-column:1/-1;text-align:center;padding:80px 20px;color:var(--muted)}
+.empty-state svg{width:48px;height:48px;opacity:.3;margin-bottom:16px}
+.empty-state h3{font-family:var(--font-head);font-size:24px;color:var(--text);margin-bottom:8px}
+.empty-state p{font-size:14px}
+
+/* ── Modal ── */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:100;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)}
+.modal-backdrop.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;max-width:960px;width:100%;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;animation:modalIn .25s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
+.modal-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-title{font-family:var(--font-head);font-size:22px;font-weight:700}
+.modal-close{background:var(--bg3);border:1px solid var(--border);color:var(--muted);width:34px;height:34px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.modal-close:hover{color:var(--text);border-color:var(--gold)}
+.modal-close svg{width:16px;height:16px}
+.modal-body{flex:1;overflow-y:auto;padding:22px}
+.modal-img{width:100%;border-radius:8px;border:1px solid var(--border);display:block;background:var(--bg3)}
+.modal-info{margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.modal-desc-full{margin-top:12px;font-size:14px;color:var(--muted);line-height:1.7}
+
+/* ── Upload Modal ── */
+.umodal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;width:520px;max-width:100%;animation:modalIn .25s ease;max-height:90vh;overflow-y:auto}
+.umodal-body{padding:24px}
+.form-group{margin-bottom:18px}
+label{display:block;font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;font-family:var(--font-mono)}
+input[type=text],input[type=date],textarea,select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--font-body);font-size:14px;padding:10px 13px;outline:none;transition:border-color .2s;resize:vertical}
+input[type=text]:focus,textarea:focus,select:focus,input[type=date]:focus{border-color:var(--gold)}
+input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.5)}
+select option{background:var(--bg2)}
+textarea{min-height:80px}
+.drop-zone{border:2px dashed var(--border);border-radius:10px;padding:36px;text-align:center;cursor:pointer;transition:all .2s;color:var(--muted)}
+.drop-zone:hover,.drop-zone.dragging{border-color:var(--gold);color:var(--gold);background:rgba(240,180,41,.04)}
+.drop-zone svg{width:32px;height:32px;margin-bottom:10px;opacity:.5}
+.drop-zone p{font-size:13px;line-height:1.5}
+.drop-zone span{font-size:11px;opacity:.6;display:block;margin-top:4px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-footer{display:flex;gap:10px;justify-content:flex-end;padding-top:8px;border-top:1px solid var(--border);margin-top:8px}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);font-family:var(--font-body);font-size:14px;padding:10px 20px;border-radius:8px;cursor:pointer;transition:all .2s}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.btn-primary{background:var(--gold);border:1px solid var(--gold);color:#0a0800;font-family:var(--font-body);font-weight:500;font-size:14px;padding:10px 22px;border-radius:8px;cursor:pointer;transition:all .2s}
+.btn-primary:hover{background:var(--gold2);border-color:var(--gold2)}
+.img-preview{width:100%;border-radius:8px;margin-top:10px;max-height:180px;object-fit:cover;display:none;border:1px solid var(--border)}
+
+/* ── View toggle ── */
+.view-toggle{display:flex;gap:4px}
+.view-btn{background:var(--bg3);border:1px solid var(--border);color:var(--muted);width:32px;height:32px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.view-btn.active,.view-btn:hover{border-color:var(--gold);color:var(--gold)}
+.view-btn svg{width:14px;height:14px}
+
+/* ── List view card override ── */
+.gallery.list-view .card{display:flex;align-items:stretch}
+.gallery.list-view .card-img-wrap{width:200px;flex-shrink:0;aspect-ratio:unset}
+.gallery.list-view .card-img-placeholder{width:200px;aspect-ratio:unset;min-height:140px}
+.gallery.list-view .card-body{flex:1}
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 20px;font-size:13px;color:var(--text);display:flex;align-items:center;gap:8px;z-index:200;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast svg{width:16px;height:16px;color:var(--gold);flex-shrink:0}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+
+/* ── Responsive ── */
+@media(max-width:600px){
+  header{padding:50px 20px 40px}
+  .controls,.gallery{padding-left:20px;padding-right:20px}
+  .stats{gap:24px;padding:20px}
+  .form-row{grid-template-columns:1fr}
+  .gallery.list-view .card{flex-direction:column}
+  .gallery.list-view .card-img-wrap,.gallery.list-view .card-img-placeholder{width:100%}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <p class="tagline">Portfolio · Visual Works</p>
+  <h1>Jason's <span>Infographics</span></h1>
+  <p class="header-sub">A web designed to showcase my works, Past and Present.</p>
+  <button class="add-btn" onclick="openAddModal()">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/>
+    </svg>
+    Add Infographic
+  </button>
+</header>
+
+<div class="stats">
+  <div class="stat-item"><div class="stat-num" id="total-count">0</div><div class="stat-lbl">Total Works</div></div>
+  <div class="stat-item"><div class="stat-num" id="cat-count">0</div><div class="stat-lbl">Categories</div></div>
+  <div class="stat-item"><div class="stat-num" id="pinned-count">0</div><div class="stat-lbl">Featured</div></div>
+</div>
+
+<div class="controls">
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <div class="filters" id="filter-btns"></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6.5" cy="6.5" r="4"/><line x1="10" y1="10" x2="14" y2="14"/></svg>
+      <input type="text" id="search-input" placeholder="Search..." oninput="renderGallery()">
+    </div>
+    <div class="view-toggle">
+      <button class="view-btn active" id="grid-btn" onclick="setView('grid')" title="Grid view">
+        <svg viewBox="0 0 14 14" fill="currentColor"><rect x="0" y="0" width="6" height="6" rx="1"/><rect x="8" y="0" width="6" height="6" rx="1"/><rect x="0" y="8" width="6" height="6" rx="1"/><rect x="8" y="8" width="6" height="6" rx="1"/></svg>
+      </button>
+      <button class="view-btn" id="list-btn" onclick="setView('list')" title="List view">
+        <svg viewBox="0 0 14 14" fill="currentColor"><rect x="0" y="0" width="14" height="3" rx="1"/><rect x="0" y="5.5" width="14" height="3" rx="1"/><rect x="0" y="11" width="14" height="3" rx="1"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="gallery" id="gallery"></div>
+
+<!-- View Modal -->
+<div class="modal-backdrop" id="view-modal" onclick="closeViewModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Untitled</div>
+      <button class="modal-close" onclick="document.getElementById('view-modal').classList.remove('open')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="2" y1="2" x2="14" y2="14"/><line x1="14" y1="2" x2="2" y2="14"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <img class="modal-img" id="modal-img" src="" alt="" style="display:none">
+      <div id="modal-placeholder" style="width:100%;background:var(--bg3);border-radius:8px;height:300px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px">No image available</div>
+      <div class="modal-info" id="modal-info"></div>
+      <p class="modal-desc-full" id="modal-desc"></p>
+    </div>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal-backdrop" id="add-modal" onclick="closeAddModal(event)">
+  <div class="umodal">
+    <div class="modal-header">
+      <div class="modal-title" id="add-modal-title">Add Infographic</div>
+      <button class="modal-close" onclick="document.getElementById('add-modal').classList.remove('open')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="2" y1="2" x2="14" y2="14"/><line x1="14" y1="2" x2="2" y2="14"/></svg>
+      </button>
+    </div>
+    <div class="umodal-body">
+      <div class="form-group">
+        <label>Image</label>
+        <div class="drop-zone" id="drop-zone" onclick="document.getElementById('img-file').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p>Click to upload or drag & drop</p>
+          <span>PNG, JPG, SVG — any image format</span>
+        </div>
+        <input type="file" id="img-file" accept="image/*" style="display:none" onchange="handleFileSelect(this)">
+        <img class="img-preview" id="img-preview" alt="Preview">
+      </div>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="inp-title" placeholder="Stardew Valley Overview">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="inp-desc" placeholder="A brief description of what this infographic covers..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0">
+          <label>Category</label>
+          <select id="inp-cat">
+            <option value="game">Game</option>
+            <option value="school">School</option>
+            <option value="personal">Personal</option>
+            <option value="tech">Tech</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label>Date</label>
+          <input type="date" id="inp-date">
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:18px">
+        <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;cursor:pointer">
+          <input type="checkbox" id="inp-pin" style="width:auto;background:none;border:none;padding:0;accent-color:var(--gold)">
+          <span style="color:var(--text)">Feature this infographic (pin to top)</span>
+        </label>
+      </div>
+      <div class="form-footer">
+        <button class="btn-ghost" onclick="document.getElementById('add-modal').classList.remove('open')">Cancel</button>
+        <button class="btn-primary" onclick="saveCard()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="2 8 6 12 14 4"/></svg>
+  <span id="toast-msg">Saved!</span>
+</div>
+
+<script>
+const STORAGE_KEY = 'jason_infographics_v1';
+let editingId = null;
+let currentView = 'grid';
+let currentFilter = 'all';
+
+const catMeta = {
+  all:      {label:'All',      cls:''},
+  game:     {label:'Game',     cls:'tag-game'},
+  school:   {label:'School',   cls:'tag-school'},
+  personal: {label:'Personal', cls:'tag-personal'},
+  tech:     {label:'Tech',     cls:'tag-tech'},
+};
+
+function loadData() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
+}
+function saveData(d) { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
+
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function formatDate(d) {
+  if (!d) return '';
+  const dt = new Date(d + 'T00:00:00');
+  return dt.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+}
+
+function initDefaults() {
+  let data = loadData();
+  if (data.length === 0) {
+    data = [
+      {
+        id: '1',
+        title: 'Stardew Valley — Overview Poster',
+        desc: 'A Minecraft-style infographic poster covering crops, characters, tools, weapons, and resources in Stardew Valley.',
+        category: 'game',
+        date: '2026-03-21',
+        pinned: true,
+        img: ''
+      },
+      {
+        id: '2',
+        title: 'Stardew Valley — Full Infographic',
+        desc: 'A complete visual breakdown of Stardew Valley including key activities, the four seasons, stats, and reasons why it\'s my favourite game.',
+        category: 'game',
+        date: '2026-03-21',
+        pinned: false,
+        img: ''
+      },
+      {
+        id: '3',
+        title: 'FaculTrack — System Overview',
+        desc: 'BLE-based faculty attendance system built with ESP32 microcontrollers and a web dashboard. Capstone project at Carlos Hilado Memorial State University.',
+        category: 'school',
+        date: '2026-03-01',
+        pinned: true,
+        img: ''
+      }
+    ];
+    saveData(data);
+  }
+  return data;
+}
+
+function buildFilters() {
+  const data = loadData();
+  const cats = ['all', ...new Set(data.map(d => d.category))];
+  const wrap = document.getElementById('filter-btns');
+  wrap.innerHTML = cats.map(c => `
+    <button class="filter-btn ${c === currentFilter ? 'active' : ''}" onclick="setFilter('${c}')">
+      ${catMeta[c] ? catMeta[c].label : c}
+    </button>
+  `).join('');
+}
+
+function setFilter(cat) {
+  currentFilter = cat;
+  buildFilters();
+  renderGallery();
+}
+
+function setView(v) {
+  currentView = v;
+  document.getElementById('gallery').className = 'gallery' + (v === 'list' ? ' list-view' : '');
+  document.getElementById('grid-btn').classList.toggle('active', v === 'grid');
+  document.getElementById('list-btn').classList.toggle('active', v === 'list');
+}
+
+function renderGallery() {
+  const data = loadData();
+  const query = document.getElementById('search-input').value.toLowerCase().trim();
+  const gallery = document.getElementById('gallery');
+
+  let filtered = data.filter(item => {
+    const matchCat = currentFilter === 'all' || item.category === currentFilter;
+    const matchQ = !query || item.title.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query);
+    return matchCat && matchQ;
+  });
+
+  // Sort: pinned first, then by date desc
+  filtered.sort((a, b) => {
+    if (a.pinned && !b.pinned) return -1;
+    if (!a.pinned && b.pinned) return 1;
+    return new Date(b.date) - new Date(a.date);
+  });
+
+  if (filtered.length === 0) {
+    gallery.innerHTML = `
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <h3>No infographics found</h3>
+        <p>${query ? 'Try a different search term.' : 'Click "Add Infographic" to get started.'}</p>
+      </div>`;
+    updateStats(data);
+    return;
+  }
+
+  gallery.innerHTML = filtered.map((item, i) => `
+    <div class="card" style="animation-delay:${i * 0.05}s" onclick="openCard('${item.id}')">
+      ${item.pinned ? '<div class="card-pin">Featured</div>' : ''}
+      <div class="card-menu" onclick="event.stopPropagation()">
+        <button class="card-menu-btn" onclick="toggleMenu('menu-${item.id}')">
+          <svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="3" r="1.3"/><circle cx="8" cy="8" r="1.3"/><circle cx="8" cy="13" r="1.3"/></svg>
+        </button>
+        <div class="dropdown" id="menu-${item.id}">
+          <button onclick="openEdit('${item.id}')">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 2l3 3-9 9H2v-3L11 2z"/></svg> Edit
+          </button>
+          <button onclick="togglePin('${item.id}')">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2l5 5-3 1-3-3-5 5v3h3l5-5 1-3z"/></svg>
+            ${item.pinned ? 'Unpin' : 'Feature'}
+          </button>
+          <button onclick="deleteCard('${item.id}')" style="color:#d96060">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="2 4 14 4"/><path d="M5 4V2h6v2M6 7v5M10 7v5"/><rect x="3" y="4" width="10" height="10" rx="1"/></svg> Delete
+          </button>
+        </div>
+      </div>
+      <div class="card-img-wrap">
+        ${item.img
+          ? `<img class="card-img" src="${item.img}" alt="${item.title}" loading="lazy">`
+          : `<div class="card-img-placeholder">
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+               <span>No image yet</span>
+             </div>`}
+      </div>
+      <div class="card-body">
+        <div class="card-tags">
+          <span class="tag ${catMeta[item.category]?.cls || ''}">${catMeta[item.category]?.label || item.category}</span>
+        </div>
+        <div class="card-title">${item.title}</div>
+        <div class="card-desc">${item.desc}</div>
+        <div class="card-meta">
+          <span class="card-date">${formatDate(item.date)}</span>
+          <div class="card-actions">
+            ${item.img ? `<button class="card-action-btn" title="Download" onclick="downloadImg(event,'${item.id}')">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="11"/><polyline points="4 8 8 12 12 8"/><line x1="2" y1="14" x2="14" y2="14"/></svg>
+            </button>` : ''}
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  updateStats(data);
+}
+
+function updateStats(data) {
+  document.getElementById('total-count').textContent = data.length;
+  document.getElementById('cat-count').textContent = new Set(data.map(d => d.category)).size;
+  document.getElementById('pinned-count').textContent = data.filter(d => d.pinned).length;
+}
+
+function openCard(id) {
+  const data = loadData();
+  const item = data.find(d => d.id === id);
+  if (!item) return;
+
+  document.getElementById('modal-title').textContent = item.title;
+  const img = document.getElementById('modal-img');
+  const ph = document.getElementById('modal-placeholder');
+  if (item.img) {
+    img.src = item.img;
+    img.style.display = 'block';
+    ph.style.display = 'none';
+  } else {
+    img.style.display = 'none';
+    ph.style.display = 'flex';
+  }
+
+  document.getElementById('modal-info').innerHTML = `
+    <span class="tag ${catMeta[item.category]?.cls || ''}">${catMeta[item.category]?.label || item.category}</span>
+    <span style="font-size:12px;color:var(--muted);font-family:var(--font-mono)">${formatDate(item.date)}</span>
+    ${item.pinned ? '<span class="card-pin" style="position:static">Featured</span>' : ''}
+  `;
+  document.getElementById('modal-desc').textContent = item.desc;
+  document.getElementById('view-modal').classList.add('open');
+}
+
+function closeViewModal(e) {
+  if (e.target.id === 'view-modal') document.getElementById('view-modal').classList.remove('open');
+}
+
+function openAddModal() {
+  editingId = null;
+  document.getElementById('add-modal-title').textContent = 'Add Infographic';
+  document.getElementById('inp-title').value = '';
+  document.getElementById('inp-desc').value = '';
+  document.getElementById('inp-cat').value = 'game';
+  document.getElementById('inp-date').value = today();
+  document.getElementById('inp-pin').checked = false;
+  document.getElementById('img-preview').style.display = 'none';
+  document.getElementById('img-preview').src = '';
+  document.getElementById('add-modal').classList.add('open');
+}
+
+function openEdit(id) {
+  closeMenus();
+  const data = loadData();
+  const item = data.find(d => d.id === id);
+  if (!item) return;
+  editingId = id;
+  document.getElementById('add-modal-title').textContent = 'Edit Infographic';
+  document.getElementById('inp-title').value = item.title;
+  document.getElementById('inp-desc').value = item.desc;
+  document.getElementById('inp-cat').value = item.category;
+  document.getElementById('inp-date').value = item.date;
+  document.getElementById('inp-pin').checked = item.pinned;
+  const prev = document.getElementById('img-preview');
+  if (item.img) { prev.src = item.img; prev.style.display = 'block'; }
+  else { prev.style.display = 'none'; prev.src = ''; }
+  document.getElementById('add-modal').classList.add('open');
+}
+
+function closeAddModal(e) {
+  if (e.target.id === 'add-modal') document.getElementById('add-modal').classList.remove('open');
+}
+
+function saveCard() {
+  const title = document.getElementById('inp-title').value.trim();
+  if (!title) { showToast('Please enter a title'); return; }
+  const data = loadData();
+  const prev = document.getElementById('img-preview');
+  const img = prev.style.display !== 'none' ? prev.src : '';
+  const item = {
+    id: editingId || String(Date.now()),
+    title,
+    desc: document.getElementById('inp-desc').value.trim(),
+    category: document.getElementById('inp-cat').value,
+    date: document.getElementById('inp-date').value || today(),
+    pinned: document.getElementById('inp-pin').checked,
+    img
+  };
+  if (editingId) {
+    const idx = data.findIndex(d => d.id === editingId);
+    if (idx > -1) data[idx] = item;
+  } else {
+    data.push(item);
+  }
+  saveData(data);
+  document.getElementById('add-modal').classList.remove('open');
+  buildFilters();
+  renderGallery();
+  showToast(editingId ? 'Updated!' : 'Added!');
+  editingId = null;
+}
+
+function deleteCard(id) {
+  closeMenus();
+  if (!confirm('Delete this infographic?')) return;
+  let data = loadData().filter(d => d.id !== id);
+  saveData(data);
+  buildFilters();
+  renderGallery();
+  showToast('Deleted');
+}
+
+function togglePin(id) {
+  closeMenus();
+  const data = loadData();
+  const item = data.find(d => d.id === id);
+  if (item) item.pinned = !item.pinned;
+  saveData(data);
+  renderGallery();
+  showToast(item.pinned ? 'Featured!' : 'Unpinned');
+}
+
+function downloadImg(e, id) {
+  e.stopPropagation();
+  const data = loadData();
+  const item = data.find(d => d.id === id);
+  if (!item || !item.img) return;
+  const a = document.createElement('a');
+  a.href = item.img;
+  a.download = item.title.replace(/\s+/g, '-').toLowerCase() + '.png';
+  a.click();
+}
+
+function toggleMenu(menuId) {
+  closeMenus(menuId);
+  document.getElementById(menuId)?.classList.toggle('open');
+}
+
+function closeMenus(except) {
+  document.querySelectorAll('.dropdown.open').forEach(m => {
+    if (m.id !== except) m.classList.remove('open');
+  });
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.card-menu')) closeMenus();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('view-modal').classList.remove('open');
+    document.getElementById('add-modal').classList.remove('open');
+  }
+});
+
+// File handling
+function handleFileSelect(input) {
+  const file = input.files[0];
+  if (!file) return;
+  readFile(file);
+}
+
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.add('dragging');
+}
+function handleDragLeave() {
+  document.getElementById('drop-zone').classList.remove('dragging');
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('dragging');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) readFile(file);
+}
+
+function readFile(file) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const prev = document.getElementById('img-preview');
+    prev.src = ev.target.result;
+    prev.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Init
+initDefaults();
+buildFilters();
+renderGallery();
+document.getElementById('inp-date').value = today();
+</script>
+</body>
+</html>
