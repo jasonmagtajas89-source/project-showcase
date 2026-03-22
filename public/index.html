@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jason's Project Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&family=DM+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <button id="auth-btn" class="auth-btn" onclick="toggleAuth()">Login</button>
+
+    <p class="tagline">Portfolio</p>
+    <h1>Jason's <span>Infographics</span></h1>
+    <p class="header-sub">A web designed to showcase my works, Past and Present.</p>
+    
+    <button id="add-project-btn" class="add-btn" onclick="openAddModal()" style="display:none;">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/>
+        </svg>
+        Add Infographic
+    </button>
+</header>
+
+<div class="stats">
+  <div class="stat-item"><div class="stat-num" id="total-count">0</div><div class="stat-lbl">Total Works</div></div>
+  <div class="stat-item"><div class="stat-num" id="cat-count">0</div><div class="stat-lbl">Categories</div></div>
+  <div class="stat-item"><div class="stat-num" id="pinned-count">0</div><div class="stat-lbl">Featured</div></div>
+</div>
+
+<div class="controls">
+  <div class="filters" id="filter-btns"></div>
+  <div class="actions-container">
+    <div class="search-wrap">
+      <input type="text" id="search-input" placeholder="Search projects..." oninput="renderGallery()">
+    </div>
+    <div class="view-toggle">
+      <button class="view-btn active" id="grid-btn" onclick="setView('grid')">Grid</button>
+      <button class="view-btn" id="list-btn" onclick="setView('list')">List</button>
+    </div>
+  </div>
+</div>
+
+<div class="gallery" id="gallery"></div>
+
+<div class="modal-backdrop" id="login-modal">
+  <div class="umodal" style="width: 350px;">
+    <div class="modal-header">
+      <div class="modal-title">Admin Login</div>
+      <button class="modal-close" onclick="document.getElementById('login-modal').classList.remove('open')">X</button>
+    </div>
+    <div class="umodal-body">
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="inp-password" placeholder="Enter password...">
+      </div>
+      <button class="btn-primary" style="width:100%" onclick="submitLogin()">Log In</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="add-modal">
+  <div class="umodal">
+    <div class="modal-header">
+      <div class="modal-title">Add Infographic</div>
+      <button class="modal-close" onclick="document.getElementById('add-modal').classList.remove('open')">X</button>
+    </div>
+    <div class="umodal-body">
+      <div class="form-group">
+        <label>Image</label>
+        <input type="file" id="img-file" accept="image/*">
+      </div>
+      <div class="form-group"><label>Title</label><input type="text" id="inp-title"></div>
+      <div class="form-group"><label>Description</label><textarea id="inp-desc"></textarea></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select id="inp-cat">
+            <option value="game">Game</option><option value="school">School</option>
+            <option value="personal">Personal</option><option value="tech">Tech</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Date</label><input type="date" id="inp-date"></div>
+      </div>
+      <div class="form-group">
+        <label><input type="checkbox" id="inp-pin"> Feature this</label>
+      </div>
+      <div class="form-footer">
+        <button class="btn-primary" onclick="saveCard()">Save Project</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toast-msg">Saved!</span></div>
+
+<script src="script.js"></script>
+</body>
+</html>
